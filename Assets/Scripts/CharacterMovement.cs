@@ -15,6 +15,12 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;        // Jump force applied to the character
     [SerializeField] private float groundCheckDistance = 1.1f; // Distance to check for ground contact (Raycast)
 
+
+    [Header("Double Jump")]
+    public bool canDoubleJump = false;
+    public bool hasDoubleJump = false;
+
+
     // ============================== Modifiable from other scripts ==================
     public float speedMultiplier = 1.0f; // Additional multiplier for character speed ( WINK WINK )
 
@@ -61,6 +67,8 @@ public class CharacterMovement : MonoBehaviour
     private void Update()
     {
         RegisterInput(); // Collect player input
+        if (IsGrounded)
+            hasDoubleJump = false;
     }
 
     /// <summary>
@@ -165,14 +173,33 @@ public class CharacterMovement : MonoBehaviour
     );
 }
 
-    // ============================== Public Methods ==============================
 
     public void Jump(float force)
     {
         if (IsGrounded)
         {
-            rb.velocity = new Vector3(rb.velocity.x, force, rb.velocity.z); // reset Y first
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(Vector3.up * force, ForceMode.Impulse);
         }
+        else if (canDoubleJump && !hasDoubleJump)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(Vector3.up * force, ForceMode.Impulse);
+            hasDoubleJump = true;
+        }
+    }
+
+    public IEnumerator EnableDoubleJump(float duration)
+    {
+        canDoubleJump = true;
+        yield return new WaitForSeconds(duration);
+        canDoubleJump = false;
+    }
+
+    public IEnumerator EnableSpeedBoost(float duration)
+    {
+        speedMultiplier = 1.4f; 
+        yield return new WaitForSeconds(duration);
+        speedMultiplier = 1f; 
     }
 }

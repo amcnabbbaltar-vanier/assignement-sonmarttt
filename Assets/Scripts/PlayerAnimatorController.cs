@@ -11,7 +11,8 @@ public class PlayerAnimatiorController : MonoBehaviour
     private float chargeTime;
     public float maxChargeTime = 3.0f;
     public bool isHoldingJump = false;
-    public float minJumpForce = 6.0f;
+    public float minJumpForce ;
+    public float maxJumpForce;
     
 
     public void Start()
@@ -21,25 +22,44 @@ public class PlayerAnimatiorController : MonoBehaviour
          rb = GetComponent<Rigidbody>();
     }
 
+    private void FixedUpdate()
+{
+    if (Input.GetKey(KeyCode.Space) && isHoldingJump)
+    {
+        chargeTime += Time.deltaTime;
+        chargeTime = Mathf.Min(chargeTime, 3f);
+    }
+}
+
     private void Update()
     {
         animator.SetFloat("CharacterSpeed", rb.velocity.magnitude);
         animator.SetBool("IsGrounded", movement.IsGrounded);
         animator.SetFloat("VerticalVelocity", rb.velocity.y);
 
-        // Handle jump charging
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(!isHoldingJump) isHoldingJump = true;
-                chargeTime += Time.deltaTime;
-                chargeTime = Mathf.Clamp(chargeTime, 0.0f, maxChargeTime);
+            chargeTime = 0f;
+            isHoldingJump = true;
+            Debug.Log("Started charging at: " + Time.time);
         }
-        else if (Input.GetKeyUp(KeyCode.Space) && isHoldingJump)
+
+        
+
+        if (Input.GetKeyUp(KeyCode.Space) && isHoldingJump)
         {
-                float jumpForce = minJumpForce + (chargeTime / maxChargeTime);
-                movement.Jump(jumpForce);
-                chargeTime = 0.0f; 
-                isHoldingJump = false;
+            float charge = chargeTime / 3f; // 0.0 to 1.0, capped
+            float jumpForce = Mathf.Lerp(minJumpForce, maxJumpForce, charge);
+            Debug.Log("Charge: " + charge + " | Force: " + jumpForce);
+
+            if (!movement.IsGrounded && movement.canDoubleJump)
+                animator.SetTrigger("doDouble");
+            else
+                animator.SetTrigger("Jump");
+
+            movement.Jump(jumpForce);
+            chargeTime = 0f;
+            isHoldingJump = false;
         }
     }
 }
