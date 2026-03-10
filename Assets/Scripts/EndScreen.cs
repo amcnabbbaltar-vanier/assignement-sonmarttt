@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
+
+public class EndScreen : MonoBehaviour
+{
+    public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI finalTimeText;
+
+    void Start()
+    {
+        if (GameManager.Instance != null)
+        {
+            finalScoreText.text = "Final Score: " + GameManager.Instance.score;
+
+            float t = GameManager.Instance.timer;
+            int minutes = (int)(t / 60);
+            int seconds = (int)(t % 60);
+            finalTimeText.text = "Time: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            GameManager.Instance.StopTimer();
+        }
+    }
+
+    public void RestartGame()
+    {
+        //reset everything
+        GameManager.Instance.score = 0;
+        GameManager.Instance.health = 3;
+        GameManager.Instance.timer = 0f;
+        GameManager.Instance.timerRunning = true;
+        SceneManager.LoadScene(0); 
+    }
+}

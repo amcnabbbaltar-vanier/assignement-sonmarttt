@@ -8,18 +8,25 @@ public class PointController : MonoBehaviour
     public PickupType pickupType;
 
     public float rotateSpeed = 90f;
+    public float hoverHeight = 0.2f;
+    public float hoverSpeed = 2f;
+    public float hover;
+    private Vector3 startPosition;
 
     public GameObject collectParticle;
     // Start is called before the first frame update
     void Start()
     {
-        
+        startPosition = transform.position;
+        hover = Random.Range(0f, 2f * Mathf.PI);
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.Rotate(0f, 0f, rotateSpeed * Time.deltaTime);
+        float newY = startPosition.y + Mathf.Sin(Time.time * hoverSpeed + hover) * hoverHeight;
+        transform.position = new Vector3(startPosition.x, newY, startPosition.z);
     }
 
     // Handle point collision with player, make is disappear and apply the effect
