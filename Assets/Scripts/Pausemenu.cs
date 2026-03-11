@@ -39,14 +39,17 @@ public class Pausemenu : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1f;
-        GameManager.Instance.score = GameManager.Instance.GetLevelStartScore();
-        GameManager.Instance.health = 3;
+        GameManager.Instance.ResetGame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void QuitToMainMenu()
     {
         Time.timeScale = 1f;
+        GameManager.Instance.score = 0;
+        GameManager.Instance.health = 3;
+        GameManager.Instance.timer = 0f;
+        GameManager.Instance.timerRunning = false;
         SceneManager.LoadScene(0); 
     }
 }

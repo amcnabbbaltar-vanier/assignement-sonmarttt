@@ -26,11 +26,7 @@ public class EndScreen : MonoBehaviour
 
     public void RestartGame()
     {
-        //reset everything
-        GameManager.Instance.score = 0;
-        GameManager.Instance.health = 3;
-        GameManager.Instance.timer = 0f;
-        GameManager.Instance.timerRunning = true;
+        Destroy(GameManager.Instance.gameObject);
         SceneManager.LoadScene(0); 
     }
 }
