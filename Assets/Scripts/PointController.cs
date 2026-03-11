@@ -49,7 +49,7 @@ void OnTriggerEnter(Collider other)
                 movement.StartCoroutine(movement.EnableDoubleJump(30f));
                 break;
             case PickupType.Score:
-                GameManager.Instance.AddScore(40);
+                GameManager.Instance.AddScore(50);
                 break;
             case PickupType.Speed:
                 movement.StartCoroutine(movement.EnableSpeedBoost(5f));

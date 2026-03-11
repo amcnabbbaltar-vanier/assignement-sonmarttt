@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public float timer = 0f;
     public bool timerRunning = true;
+    private float timerAtLevelStart = 0f;
 
     public int score = 0;
     private int scoreAtLevelStart = 0;
@@ -25,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.buildIndex == 3 || scene.buildIndex == 0){ //end screen or main menu
+        if (scene.buildIndex == 4 || scene.buildIndex == 0){ //end screen or main menu
             hudCanvas.enabled = false; //  → hide
             timerRunning = false;
         }
@@ -74,8 +75,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OnLevelStart() { scoreAtLevelStart = score; }
-    public int GetLevelStartScore() { return scoreAtLevelStart; }
+    public void OnLevelStart() { scoreAtLevelStart = score; timerAtLevelStart = timer; }
+    public (int, float) GetLevelStartScoreAndTimer() { return (scoreAtLevelStart, timerAtLevelStart); }
     public void AddScore(int amount) { score += amount; }
     public void StopTimer() { timerRunning = false; }
 
@@ -86,6 +87,7 @@ public class GameManager : MonoBehaviour
         {
             health = 3;
             score = scoreAtLevelStart;
+            timer = timerAtLevelStart;
             ResetGame();
         }
     }
@@ -94,12 +96,13 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         score = scoreAtLevelStart;
         health = 3;
-        timer = 0f;
+        timer = timerAtLevelStart;
         timerRunning = true;
     }
-    void Start()
+    public void Start()
     {
         score = 0;
         health = 3;

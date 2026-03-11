@@ -7,6 +7,8 @@ public class PlayerAnimatiorController : MonoBehaviour
     private Animator animator;
     private CharacterMovement movement;
     private Rigidbody rb;
+    private AudioSource audioSource;
+    public AudioClip doubleJumpSound;
 
     private float chargeTime;
     public float maxChargeTime = 3.0f;
@@ -19,7 +21,8 @@ public class PlayerAnimatiorController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         movement = GetComponent<CharacterMovement>();
-         rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -52,8 +55,10 @@ public class PlayerAnimatiorController : MonoBehaviour
             float jumpForce = Mathf.Lerp(minJumpForce, maxJumpForce, charge);
             Debug.Log("Charge: " + charge + " | Force: " + jumpForce);
 
-            if (!movement.IsGrounded && movement.canDoubleJump)
+            if (!movement.IsGrounded && movement.canDoubleJump){
                 animator.SetTrigger("doDouble");
+                audioSource.PlayOneShot(doubleJumpSound);
+            }
             else
                 animator.SetTrigger("Jump");
 

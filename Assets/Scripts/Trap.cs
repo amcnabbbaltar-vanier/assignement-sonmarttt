@@ -5,9 +5,8 @@ using UnityEngine;
 public class Trap : MonoBehaviour
 {
     public bool canMove = false;
-    public MoveDirection moveDirection;
-    private bool isMoving = false;
     public enum MoveDirection { LeftRight, UpDown }
+    public MoveDirection moveDirection;
     public float moveDistance = 2f;
     public float moveSpeed = 2f;
     private Vector3 startPosition;
@@ -15,19 +14,13 @@ public class Trap : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
-        StartCoroutine(StartMovingAfterDelay());
     }
 
-    IEnumerator StartMovingAfterDelay()
-    {
-        yield return new WaitForSeconds(Random.Range(0f, 3f)); // random delay between 0 and 3 seconds
-        isMoving = true;
-    }
-
+    
 
     void Update()
     {
-        if (canMove && isMoving)
+        if (canMove)
         {
             float moveAmount = Mathf.Sin(Time.time * moveSpeed) * moveDistance;
             if (moveDirection == MoveDirection.LeftRight)
@@ -43,7 +36,6 @@ public class Trap : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger hit by: " + other.name + " | Tag: " + other.tag);
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.TakeDamage();

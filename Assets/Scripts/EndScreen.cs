@@ -26,7 +26,8 @@ public class EndScreen : MonoBehaviour
 
     public void RestartGame()
     {
-        Destroy(GameManager.Instance.gameObject);
-        SceneManager.LoadScene(0); 
+        //Destroy(GameManager.Instance.gameObject);
+        GameManager.Instance.Start();
+        SceneManager.LoadScene(1); 
     }
 }
